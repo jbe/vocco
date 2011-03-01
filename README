@@ -1,0 +1,77 @@
+
+        ,---.                                        
+       /__./|   ,---.                        ,---.   
+  ,---.;  ; |  '   ,'\                      '   ,'\
+ /___/ \  | | /   /   |   ,---.     ,---.  /   /   | 
+ \   ;  \ ' |.   ; ,. :  /     \   /     \.   ; ,. : 
+  \   \  \: |'   | |: : /    / '  /    / ''   | |: : 
+   ;   \  ' .'   | .; :.    ' /  .    ' / '   | .; : 
+    \   \   '|   :    |'   ; :__ '   ; :__|   :    | 
+     \   `  ; \   \  / '   | '.'|'   | '.'|\   \  /  
+      :   \ |  `----'  |   :    :|   :    : `----'   
+       '---"            \   \  /  \   \  /           
+                         `----'    `----'            
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Literate programming-style documentation using Vim
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+   HI :)  Vocco uses Vim's :TOhtml feature to
+          render groups of files as syntax
+          highlighted HTML, using your
+          everyday Vim settings.
+
+          Make sure you have MacVim or gvim
+          and a nice default color scheme
+          installed for optimum roi.
+
+   USAGE  vocco [options] [glob ..]
+
+          The HTML files will be written to
+          output_dir.
+
+          Files matching any of the supplied
+          globs will be processed.
+
+          If no globs are given, vocco will
+          use these:
+
+
+ OPTIONS
+        --out   OUTPUT_DIR
+
+        --name  PROJECT_NAME
+
+        --site  PROJECT_URL
+
+        --vim   VIM_COMMAND
+        
+        The --vim option specifies which
+        executable to use when rendering.
+
+
+DEFAULTS
+
+      [glob..]  '**/*.rb', 'README', 'LICENCE'
+
+        --out   './docs'
+
+        --name  Get from gemfile, or use
+                current directory name.
+
+        --site  Get from gemspec if available.
+
+        --vim   macvim,gvim,vim
+
+
+GREETS    Docco
+           http://jashkenas.github.com/docco/
+          Rocco
+           http://rtomayko.github.com/rocco/
+          Shocco
+           http://rtomayko.github.com/shocco/
+
+
+COPYING   Copyright (c) 2011 Jostein Berre
+          Eliassen. Released under an MIT
+          license. See LICENSE.txt for info.

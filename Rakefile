@@ -16,7 +16,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/jbe/vocco"
   gem.license = "MIT"
   gem.summary = %Q{vocco is an extra super quick-and-dirty documentation generator based on Vim, written in Ruby.}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.description = %Q{vocco is an extra super quick-and-dirty documentation generator based on Vim, written in Ruby.}
   gem.email = "post@jostein.be"
   gem.authors = ["jbe"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
@@ -26,28 +26,3 @@ Jeweler::Tasks.new do |gem|
 end
 Jeweler::RubygemsDotOrgTasks.new
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
-
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
-
-task :default => :test
-
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "vocco #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
