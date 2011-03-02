@@ -49,7 +49,7 @@ color scheme installed for optimum roi.
               Vocco.run :out => './website'
 
 
-       NOTES  Docco can include notes for
+       NOTES  Vocco can include notes for
               each file.
 
               Given

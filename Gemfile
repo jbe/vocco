@@ -3,6 +3,7 @@ source "http://rubygems.org"
 gem 'trollop'
 gem 'why-hpricot'
 gem 'tilt'
+gem 'rdiscount'
 
 group :development do
   gem "shoulda", ">= 0"

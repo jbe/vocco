@@ -10,6 +10,7 @@ GEM
       git (>= 1.2.5)
       rake
     rake (0.8.7)
+    rdiscount (1.6.8)
     shoulda (2.11.3)
     slim (0.9.0)
       temple (~> 0.1.7)
@@ -32,6 +33,7 @@ DEPENDENCIES
   haml
   i18n
   jeweler (~> 1.5.2)
+  rdiscount
   shoulda
   slim
   tilt

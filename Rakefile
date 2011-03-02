@@ -55,7 +55,7 @@ task :docs do
   require 'vocco'
   Vocco.run(
     :out    => 'website', 
-    :files  => ['lib/**/*.rb']
+    :files  => %w{README LICENSE lib/**/*.rb}
     )
 end
 

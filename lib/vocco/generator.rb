@@ -7,7 +7,7 @@ class Vocco::Generator
   attr_reader :globs, :notes, :out, :name, :site
 
   def initialize(opts)
-    @globs  = opts[:files]
+    @globs  = opts[:files].map {|path| path.sub(/\/$/, '') }
     @out    = opts[:out]
     @notes  = opts[:notes]
     @name   = opts[:name].capitalize
@@ -21,15 +21,25 @@ class Vocco::Generator
   end
   alias :run! :run
 
+  def trimmed_globs
+    @trimmed_globs ||= @globs.map do |glob|
+      glob.gsub(/(^\.\/)|(\/$)/, '')
+    end
+  end
+
+  def scopes
+    @scopes ||= trimmed_globs.map do |glob|
+      tokens = glob.split('*')
+      tokens.size > 1 ? tokens.first : nil
+    end.compact
+  end
+
   def glob_regex
     @glob_regex ||= begin
-      str = @globs.map do |g|
-        Regexp::escape(
-          File.dirname(
-            g.split('*').first
-          )) + '\/'
+      str = scopes.map do |scope|
+        Regexp::escape(scope)
       end.join('|')
-      /^(\.\/)?(#{str})/
+      /^(\.\/)?(#{str})(\/)?/
     end
   end
 
@@ -42,8 +52,10 @@ class Vocco::Generator
 
   def files
     @files ||= @globs.map do |glob|
-      Dir[glob].map {|path| SourceFile.new(path, self) }
-    end.flatten
+      Dir[glob]
+    end.flatten.uniq.map do |path|
+      SourceFile.new(path, self)
+    end
   end
 
   private
@@ -105,6 +117,11 @@ class Vocco::Generator::SourceFile
   def initialize(file, generator)
     @file       = file
     @gen        = generator
+    puts short_path.inspect
+    puts short_dirname.inspect
+    puts dirname.inspect
+    puts basename.inspect
+    puts doc_path.inspect
   end
 
   attr_reader :file
@@ -114,7 +131,7 @@ class Vocco::Generator::SourceFile
   end
 
   def short_dirname
-    File.dirname(short_path)
+    File.dirname(short_path).sub(/^\.\//, '')
   end
 
   def dirname
@@ -125,9 +142,12 @@ class Vocco::Generator::SourceFile
     File.basename(@file)
   end
 
+  def doc_prefix
+    short_dirname == '.' ? '' : short_dirname.gsub('/', '-') + '-'
+  end
+
   def doc_path
-    File.join(@gen.out, short_dirname.gsub('/', '_') +
-              '_' + basename + '.html')
+    File.join(@gen.out, doc_prefix + basename + '.html')
   end
 
   def doc_link
