@@ -70,6 +70,7 @@ class Vocco::Generator
       script = Tempfile.new('vimdocco')
       script.write(vimscript)
       script.close
+      puts 'Running ' + vim_command ':'
       system "#{vim_command} -f -S #{script.path}"
       script.delete
     end
@@ -117,11 +118,6 @@ class Vocco::Generator::SourceFile
   def initialize(file, generator)
     @file       = file
     @gen        = generator
-    puts short_path.inspect
-    puts short_dirname.inspect
-    puts dirname.inspect
-    puts basename.inspect
-    puts doc_path.inspect
   end
 
   attr_reader :file
