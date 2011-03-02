@@ -15,10 +15,13 @@
         Quick and dirty documentation using Vim       
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 Vocco is a super patchy literate programming-style
 documentation generator using Vim's :TOhtml feature.
 It renders groups of files as syntax highlighted HTML,
 using your everyday Vim settings.
+
+       <http://jbe.github.com/vocco/README.html>
 
 Make sure you have gvim or macvim and a nice default
 color scheme installed for optimum roi.
