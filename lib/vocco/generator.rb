@@ -70,7 +70,7 @@ class Vocco::Generator
       script = Tempfile.new('vimdocco')
       script.write(vimscript)
       script.close
-      puts 'Running ' + vim_command ':'
+      puts 'Running ' + vim_command + ':'
       system "#{vim_command} -f -S #{script.path}"
       script.delete
     end
