@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Vocco : README</title>
+<meta name="Generator" content="Vim/7.2" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<style type="text/css">
+<!--
+body { color: #e8e8d3; background-color: #151515; font-family: monospace; }
+-->
+</style><style type="text/css">body {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
+  font-size: 15px; }
+
+html, body {
+  height: 100%; }
+
+body {
+  padding: 1em; }
+
+.code {
+  font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace;
+  font-size: 16px;
+  padding: 1em;
+  width: 50%; }
+
+.nav {
+  width: 40%;
+  position: fixed;
+  top: 0;
+  left: 55%;
+  height: 100%;
+  font-size: 15px;
+  line-height: 22px;
+  color: #252519; }
+  .nav .wrapper {
+    color: black;
+    height: 100%; }
+    .nav .wrapper .area {
+      background-color: #cccccc;
+      padding: 1em 1em 1em 1em;
+      border-bottom: 1px dashed #bbbbbb;
+      border-top: 1px dashed #666666; }
+      .nav .wrapper .area .autohide {
+        opacity: 0;
+        height: 0px;
+        -webkit-transition: all 0.2s linear;
+        overflow: auto; }
+      .nav .wrapper .area:hover .autohide {
+        height: 150px;
+        opacity: 1; }
+    .nav .wrapper .notes {
+      max-height: 40%;
+      overflow: auto; }
+
+table th {
+  text-align: right; }
+
+</style>
+</head>
+<body><div class="code">
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,---.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /__./|&nbsp;&nbsp; ,---.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,---.&nbsp;&nbsp; <br />
+&nbsp;&nbsp;,---.;&nbsp;&nbsp;; |&nbsp;&nbsp;'&nbsp;&nbsp; ,'\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&nbsp;&nbsp; ,'\<br />
+&nbsp;/___/ \&nbsp;&nbsp;| | /&nbsp;&nbsp; /&nbsp;&nbsp; |&nbsp;&nbsp; ,---.&nbsp;&nbsp;&nbsp;&nbsp; ,---.&nbsp;&nbsp;/&nbsp;&nbsp; /&nbsp;&nbsp; | <br />
+&nbsp;\&nbsp;&nbsp; ;&nbsp;&nbsp;\ ' |.&nbsp;&nbsp; ; ,. :&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp; /&nbsp;&nbsp;&nbsp;&nbsp; \.&nbsp;&nbsp; ; ,. : <br />
+&nbsp;&nbsp;\&nbsp;&nbsp; \&nbsp;&nbsp;\: |'&nbsp;&nbsp; | |: : /&nbsp;&nbsp;&nbsp;&nbsp;/ '&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/ ''&nbsp;&nbsp; | |: : <br />
+&nbsp;&nbsp; ;&nbsp;&nbsp; \&nbsp;&nbsp;' .'&nbsp;&nbsp; | .; :.&nbsp;&nbsp;&nbsp;&nbsp;' /&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;&nbsp;' / '&nbsp;&nbsp; | .; : <br />
+&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp; \&nbsp;&nbsp; '|&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;|'&nbsp;&nbsp; ; :__ '&nbsp;&nbsp; ; :__|&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;| <br />
+&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp; `&nbsp;&nbsp;; \&nbsp;&nbsp; \&nbsp;&nbsp;/ '&nbsp;&nbsp; | '.'|'&nbsp;&nbsp; | '.'|\&nbsp;&nbsp; \&nbsp;&nbsp;/&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp; \ |&nbsp;&nbsp;`----'&nbsp;&nbsp;|&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;:|&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;: `----'&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '---&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp; \&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp; \&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `----'&nbsp;&nbsp;&nbsp;&nbsp;`----'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quick and dirty documentation using Vim&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br />
+<br />
+Vocco is a super patchy literate programming-style<br />
+documentation generator using Vim's :TOhtml feature.<br />
+It renders groups of files as syntax highlighted HTML,<br />
+using your everyday Vim settings.<br />
+<br />
+Make sure you have gvim or macvim and a nice default<br />
+color scheme installed for optimum roi.<br />
+<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; USAGE&nbsp;&nbsp;vocco [options]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;writes html to the directory<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;given by --out, for all files<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matching the --file globs.<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp; OPTIONS&nbsp;&nbsp;--files '**/*.rb' README LICENCE<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; and<br />
+&nbsp;&nbsp;&nbsp;&nbsp;defaults&nbsp;&nbsp;--out&nbsp;&nbsp; ./docs<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--notes ./notes<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--name&nbsp;&nbsp;from gemspec, or use<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;current directory name.<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--site&nbsp;&nbsp;from gemspec, or none<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--vim&nbsp;&nbsp; macvim gvim vim<br />
+<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp; RUBYGEM&nbsp;&nbsp;$ gem install vocco<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vocco.run :out =&gt; './website'<br />
+<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTES&nbsp;&nbsp;Vocco can include notes for<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;each file.<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Given<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- files 'tra/la/**/*.rb'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and that there is a file at<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'tra/la/bup/fum.rb',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and that<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- notes='./notes'<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Then you can put notes at<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'notes/bup/fum.rb.md', or<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'tra/la/bup/fum.md'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Instead of .md (markdown), you<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can also use .textile and<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.rdoc.<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bonus points for noticing that<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the static part of the globs<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;are automagically trimmed off<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the paths.<br />
+<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GREETS&nbsp;&nbsp;Docco:&nbsp;&nbsp;&lt;<a href="http://jashkenas.github.com/docco/">http://jashkenas.github.com/docco/</a>&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rocco:&nbsp;&nbsp;&lt;<a href="http://rtomayko.github.com/rocco/">http://rtomayko.github.com/rocco/</a>&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shocco: &lt;<a href="http://rtomayko.github.com/shocco/">http://rtomayko.github.com/shocco/</a>&gt;<br />
+<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp; COPYING&nbsp;&nbsp;Copyright (c) 2011 Jostein Berre<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Eliassen. Released under an MIT<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;license. See LICENSE.txt for info.<br />
+</div><div class="nav"><div class="wrapper"><div class="area"><h3><strong><a href="http://github.com/jbe/vocco">Vocco</a></strong><span> : </span><span>README</span></h3><p class="autohide"><a href="./README.html">README</a><br />vocco/<a href="./vocco-generator.rb.html">generator.rb</a><br />vocco/generator/<a href="./vocco-generator-css.rb.html">css.rb</a><br />vocco/generator/source_file/<a href="./vocco-generator-source_file-html_template.rb.html">html_template.rb</a><br />vocco/<a href="./vocco-cli.rb.html">cli.rb</a><br /><a href="./vocco.rb.html">vocco.rb</a><br /></p></div><div class="notes area"><p>This webpage was generated by running Vocco on its own source code.</p>
+
+<p>These paragraphs are actually "notes" attached to the README -- they were automatically generated and included from <code>./notes/README.md</code>. Notes can also be kept in the same directory as the source files, as long as their names correspond; like <code>app.rb.md</code> or <code>config.yml.textile</code>.</p>
+
+<p>The supported note format extensions are: md, mkd, markdown, textile and rdoc.</p>
+
+<p>Have a great day. &hearts;</p>
+</div><div class="area"><table><tr><th>Generated:</th><td>2011-03-02 14:43:31 +0100</td></tr></table></div></div></div></body>
+</html>
