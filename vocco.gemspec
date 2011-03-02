@@ -5,25 +5,46 @@
 
 Gem::Specification.new do |s|
   s.name = %q{vocco}
-  s.version = "0.0.0"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["jbe"]
-  s.date = %q{2011-03-01}
+  s.date = %q{2011-03-02}
+  s.default_executable = %q{vocco}
   s.description = %q{vocco is an extra super quick-and-dirty documentation generator based on Vim, written in Ruby.}
   s.email = %q{post@jostein.be}
+  s.executables = ["vocco"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README"
+    "README",
+    "TODO"
   ]
   s.files = [
+    ".bundle/config",
     ".document",
     "Gemfile",
+    "Gemfile.lock",
     "LICENSE.txt",
     "README",
     "Rakefile",
+    "TODO",
     "VERSION",
-    "lib/vocco.rb"
+    "bin/vocco",
+    "lib/vocco.rb",
+    "lib/vocco/cli.rb",
+    "lib/vocco/generator.rb",
+    "lib/vocco/generator/css.rb",
+    "lib/vocco/generator/source_file/html_template.rb",
+    "notes/README.md",
+    "template/css.sass",
+    "template/html.slim",
+    "vocco.gemspec",
+    "website/README.html",
+    "website/vocco-cli.rb.html",
+    "website/vocco-generator-css.rb.html",
+    "website/vocco-generator-source_file-html_template.rb.html",
+    "website/vocco-generator.rb.html",
+    "website/vocco.rb.html"
   ]
   s.homepage = %q{http://github.com/jbe/vocco}
   s.licenses = ["MIT"]
@@ -37,6 +58,9 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<trollop>, [">= 0"])
+      s.add_runtime_dependency(%q<why-hpricot>, [">= 0"])
+      s.add_runtime_dependency(%q<tilt>, [">= 0"])
+      s.add_runtime_dependency(%q<rdiscount>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -45,8 +69,12 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<haml>, [">= 0"])
       s.add_development_dependency(%q<i18n>, [">= 0"])
       s.add_development_dependency(%q<activesupport>, [">= 0"])
+      s.add_development_dependency(%q<vocco>, [">= 0"])
     else
       s.add_dependency(%q<trollop>, [">= 0"])
+      s.add_dependency(%q<why-hpricot>, [">= 0"])
+      s.add_dependency(%q<tilt>, [">= 0"])
+      s.add_dependency(%q<rdiscount>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -55,9 +83,13 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<haml>, [">= 0"])
       s.add_dependency(%q<i18n>, [">= 0"])
       s.add_dependency(%q<activesupport>, [">= 0"])
+      s.add_dependency(%q<vocco>, [">= 0"])
     end
   else
     s.add_dependency(%q<trollop>, [">= 0"])
+    s.add_dependency(%q<why-hpricot>, [">= 0"])
+    s.add_dependency(%q<tilt>, [">= 0"])
+    s.add_dependency(%q<rdiscount>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -66,6 +98,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<haml>, [">= 0"])
     s.add_dependency(%q<i18n>, [">= 0"])
     s.add_dependency(%q<activesupport>, [">= 0"])
+    s.add_dependency(%q<vocco>, [">= 0"])
   end
 end
 
