@@ -1,137 +1,59 @@
 
 
-# TODO: gemfile
-
-require 'nokogiri'
-
+require 'hpricot'
+require 'tilt'
 require 'tempfile'
 
 
 module Vocco
 
-  class Generator
+  require 'vocco/generator'
+  require 'vocco/cli'
 
-    DEFAULT_GLOBS   = %w{**/*.rb README LICENSE}
-    DEFAULT_OUT     = 'docs'
-
-    attr_reader :out, :globs, :files, :docs
-
-    def initialize(out=DEFAULT_OUT, *globs)
-      @out = out
-      validate_out
-      @globs = globs.empty? ? DEFAULT_GLOBS :
-                              globs.flatten.compact
-      @files  = glob_files
-      @docs   = {}
-      map_files_to_docs
+  class << self
+    def name_fallback
+      gemspec(:name) || File.basename(Dir.pwd)
     end
 
-    def run!
-      run_vim
-      #write_css
-      postprocess
+    def site_fallback
+      gemspec(:homepage)
     end
 
-    private
+    def gemspec(prop)
+      begin
+        require 'rubygems'
+        @gemspec ||= Gem::Specification.load(File.basename(Dir.pwd) + '.gemspec')
+        @gemspec.send prop
+      rescue
+        nil
+      end
+    end
 
-      def validate_out
-        unless File.directory?(@out)
-          raise "#{@out} is not a valid directory."
-        end
+    def run(opts)
+
+      bad_opts = opts.keys - OPTIONS.map {|line| line[0] }
+
+      unless bad_opts.empty?
+        raise "Invalid options: #{bad_opts}"
       end
 
-      def glob_files
-        @globs.map {|glob| Dir[glob] }.flatten
+      0.upto(OPTIONS.size - 1) do |n|
+        opts[OPTIONS[n][0]] ||= OPTIONS[n][2]
       end
 
-      def map_files_to_docs
-        @files.each do |file|
-          @docs[file] = File.join(
-            @out, File.basename(file) + '.html'
-            )
-        end
-      end
-
-      def run_vim
-        script = Tempfile.new('vimdocco')
-        script.write(vimscript)
-        script.close
-        system "gvim -f -S #{script.path}"
-        script.delete
-      end
-
-      def write_css
-        File.open(css_path, 'w') {|f| f.write(CSS) }
-      end
-
-      def css_path
-        File.join(@out, 'vimdocco.css')
-      end
-
-      def postprocess
-        modify_docs_using_nokogiri do |doc, orig_path|
-
-          insert :after, 'style', 'style', doc,
-            #:rel  => 'stylesheet',
-            :type => 'text/css',
-            #:href => css_path
-            :content => CSS
-
-          insert :before, 'pre', 'pre', doc,
-            :content => doc_header(orig_path)
-        end
-      end
-
-      def insert(vector, path, tag, doc, props={})
-        tag = Nokogiri::XML::Node.new tag.to_s, doc
-        tag.content = props.delete(:content)
-        props.each {|k,v| tag[k.to_s] = v.to_s }
-        doc.css(path.to_s).send(vector, tag)
-      end
-
-      def modify_docs_using_nokogiri
-        docs.each do |original, html|
-          doc = File.open(html) {|f| Nokogiri::HTML(f.read) }
-          yield(doc, original)
-          File.open(html, 'w') {|f| f.write(doc.to_html) }
-        end
-      end
-
-      def doc_header(orig_path)
-        "FILE:        #{orig_path}\n" +
-        "PROJECT:     #{'todo'}\n" +
-        "HOMEPAGE:    #{'todo'}\n\n" +
-        "INDEX:       #{'list of files..'}\n\n" +
-        '-' * 10
-      end
-
-      def vimscript
-        @vimscript ||= (
-          files.map do |path|
-            ["sp #{path}", "TOhtml",
-              "w! #{docs[path]}"]
-          end + [":qall!"]
-          ).join("\n")
-      end
+      Generator.new(opts).run
+    end
+    alias :run! :run
   end
 
-  def self.run!(*prms)
-    Generator.new(*prms).run!
-  end
+  OPTIONS = [
+    [:files,  "File match globs",   %w{**/*.rb README LICENSE}  ],
+    [:out,    "Output directory",   './docs'                    ],
+    [:notes,  "Note directories",   ['./notes']                 ],
+    [:name,   "Project name",       name_fallback               ],
+    [:site,   "Project url",        site_fallback               ],
+    [:vim,    "Vim command",        %w{macvim gvim vim}         ]
+  ]
 end
-
-Vocco::CSS = <<-EOF
-  html {
-    font-size: 18px;
-  }
-
-EOF
-
-
-Vocco.run!(*$*)
-
-# system "gvim +TOhtml +'w! #{target_path}' +qa! #{file_path}"
-
-
 
 

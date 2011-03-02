@@ -26,3 +26,52 @@ Jeweler::Tasks.new do |gem|
 end
 Jeweler::RubygemsDotOrgTasks.new
 
+
+def precompile(const_name, template)
+
+  require 'active_support/inflector'
+  String.send :include, ActiveSupport::Inflector
+
+  path = File.join('lib', const_name.underscore + '.rb')
+
+  generated = case template
+    when Tilt::SassTemplate then template.render
+    when Slim::Template then template.send(:precompiled_template, {})
+    else raise 'unsupported template'
+  end
+
+  heredoc_str = '__YOU_ARE_SPECIAL__'
+  opener      = "#{const_name} = <<-'#{heredoc_str}'\n"
+  closer      = "\n#{heredoc_str}\n"
+
+  File.open(path, 'w') do |file|
+    file.write opener + generated + closer
+  end
+end
+
+
+
+task :docs do
+  require 'vocco'
+  Vocco.run(
+    :out    => 'website', 
+    :files  => ['lib/**/*.rb']
+    )
+end
+
+
+namespace :build do
+  task :templates do
+    require 'tilt'
+    require 'slim'
+    precompile(
+      'Vocco::Generator::CSS',
+      Tilt.new('template/css.sass')
+      )
+    precompile(
+      'Vocco::Generator::SourceFile::HTML_TEMPLATE',
+      Tilt.new('template/html.slim', :auto_escape => false)
+      )
+  end
+end
+

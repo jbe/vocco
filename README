@@ -12,66 +12,72 @@
        '---"            \   \  /  \   \  /           
                          `----'    `----'            
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Literate programming-style documentation using Vim
+        Quick and dirty documentation using Vim       
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Vocco is a super patchy literate programming-style
+documentation generator using Vim's :TOhtml feature.
+It renders groups of files as syntax highlighted HTML,
+using your everyday Vim settings.
 
-   HI :)  Vocco uses Vim's :TOhtml feature to
-          render groups of files as syntax
-          highlighted HTML, using your
-          everyday Vim settings.
-
-          Make sure you have MacVim or gvim
-          and a nice default color scheme
-          installed for optimum roi.
-
-   USAGE  vocco [options] [glob ..]
-
-          The HTML files will be written to
-          output_dir.
-
-          Files matching any of the supplied
-          globs will be processed.
-
-          If no globs are given, vocco will
-          use these:
+Make sure you have gvim or macvim and a nice default
+color scheme installed for optimum roi.
 
 
- OPTIONS
-        --out   OUTPUT_DIR
+       USAGE  vocco [options]
+            
+              writes html to the directory
+              given by --out, for all files
+              matching the --file globs.
 
-        --name  PROJECT_NAME
+     OPTIONS  --files '**/*.rb' README LICENCE
+         and
+    defaults  --out   ./docs
 
-        --site  PROJECT_URL
+              --notes ./notes
 
-        --vim   VIM_COMMAND
-        
-        The --vim option specifies which
-        executable to use when rendering.
+              --name  from gemspec, or use
+                      current directory name.
 
+              --site  from gemspec, or none
 
-DEFAULTS
-
-      [glob..]  '**/*.rb', 'README', 'LICENCE'
-
-        --out   './docs'
-
-        --name  Get from gemfile, or use
-                current directory name.
-
-        --site  Get from gemspec if available.
-
-        --vim   macvim,gvim,vim
+              --vim   macvim gvim vim
 
 
-GREETS    Docco
-           http://jashkenas.github.com/docco/
-          Rocco
-           http://rtomayko.github.com/rocco/
-          Shocco
-           http://rtomayko.github.com/shocco/
+     RUBYGEM  $ gem install vocco
+
+              Vocco.run :out => './website'
 
 
-COPYING   Copyright (c) 2011 Jostein Berre
-          Eliassen. Released under an MIT
-          license. See LICENSE.txt for info.
+       NOTES  Docco can include notes for
+              each file.
+
+              Given
+                -- files 'tra/la/**/*.rb'
+                and that there is a file at
+                'tra/la/bup/fum.rb',
+                and that
+                -- notes='./notes'
+
+              Then you can put notes at
+                'notes/bup/fum.rb.md', or
+                'tra/la/bup/fum.md'
+                
+              Instead of .md (markdown), you
+              can also use .textile and
+              .rdoc.
+
+              Bonus points for noticing that
+              the static part of the globs
+              are automagically trimmed off
+              the paths.
+
+
+      GREETS  Docco:  <http://jashkenas.github.com/docco/>
+              Rocco:  <http://rtomayko.github.com/rocco/>
+              Shocco: <http://rtomayko.github.com/shocco/>
+
+
+     COPYING  Copyright (c) 2011 Jostein Berre
+              Eliassen. Released under an MIT
+              license. See LICENSE.txt for info.

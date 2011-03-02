@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Vocco : cli.rb</title>
+<meta name="Generator" content="Vim/7.2" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<style type="text/css">
+<!--
+.rubyIdentifier { color: #c6b6fe; }
+.rubySymbol { color: #7697d6; }
+.Special { color: #799d6a; }
+.Constant { color: #cf6a4c; }
+.PreProc { color: #8fbfdc; }
+.Function { color: #fad07a; }
+.StringDelimiter { color: #556633; }
+.String { color: #99ad6a; }
+.rubyControl { color: #7597c6; }
+.Type { color: #ffb964; }
+body { color: #e8e8d3; background-color: #151515; font-family: monospace; }
+.rubyClass { color: #447799; }
+-->
+</style><style type="text/css">body {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
+  font-size: 15px; }
+
+html, body {
+  height: 100%; }
+
+body {
+  padding: 1em; }
+
+.code {
+  font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace;
+  font-size: 16px;
+  padding: 1em;
+  width: 50%; }
+
+.nav {
+  width: 40%;
+  position: fixed;
+  top: 0;
+  left: 55%;
+  height: 100%;
+  font-size: 15px;
+  line-height: 22px;
+  color: #252519; }
+  .nav .wrapper {
+    color: black;
+    height: 100%; }
+    .nav .wrapper .area {
+      background-color: #cccccc;
+      padding: 1em 1em 1em 1em;
+      border-bottom: 1px dashed #bbbbbb;
+      border-top: 1px dashed #666666; }
+      .nav .wrapper .area .autohide {
+        opacity: 0;
+        height: 0px;
+        -webkit-transition: all 0.2s linear;
+        overflow: auto; }
+      .nav .wrapper .area:hover .autohide {
+        height: 150px;
+        opacity: 1; }
+    .nav .wrapper .notes {
+      max-height: 40%;
+      overflow: auto; }
+
+table th {
+  text-align: right; }
+
+</style>
+</head>
+<body><div class="code">
+<br />
+<br />
+<span class="rubyClass">module</span>&nbsp;<span class="Type">Vocco</span>::<span class="Type">CLI</span><br />
+<br />
+&nbsp;&nbsp;<span class="rubyClass">class</span>&nbsp;&lt;&lt; <span class="Constant">self</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">start</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">trollop</span><span class="StringDelimiter">'</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opts = <span class="Type">Trollop</span>::options <span class="rubyControl">do</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;banner <span class="StringDelimiter">&quot;</span><span class="String">Usage: vocco [options]</span><span class="Special">\n\n</span><span class="String">Options:</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::<span class="Type">Vocco</span>::<span class="Type">OPTIONS</span>.each <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">name</span>, <span class="rubyIdentifier">desc</span>, <span class="rubyIdentifier">default</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opt name, desc, <span class="rubySymbol">:default</span>&nbsp;=&gt; default<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::<span class="Type">Vocco</span>::<span class="Type">Generator</span>.new(opts).run<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
+&nbsp;&nbsp;<span class="rubyClass">end</span><br />
+<span class="rubyClass">end</span><br />
+<br />
+<br />
+</div><div class="nav"><div class="wrapper"><div class="area"><h3><strong><a href="http://github.com/jbe/vocco">Vocco</a></strong><span> : </span><span>cli.rb</span></h3><p class="autohide">lib/vocco/<a href="./lib_vocco_generator.rb.html">generator.rb</a><br />lib/vocco/generator/<a href="./lib_vocco_generator_css.rb.html">css.rb</a><br />lib/vocco/generator/<a href="./lib_vocco_generator_html_template.rb.html">html_template.rb</a><br />lib/vocco/generator/source_file/<a href="./lib_vocco_generator_source_file_html_template.rb.html">html_template.rb</a><br />lib/vocco/<a href="./lib_vocco_cli.rb.html">cli.rb</a><br />lib/<a href="./lib_vocco.rb.html">vocco.rb</a><br /></p></div><div class="area"><table><tr><th>Generated:</th><td>2011-03-02 03:26:50 +0100</td></tr></table></div></div></div></body>
+</html>

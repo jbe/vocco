@@ -1,0 +1,27 @@
+.nav
+  .wrapper
+    .area
+      h3
+        strong
+          - if @gen.site
+            a href=@gen.site = @gen.name
+          - else
+            = @gen.name
+        span = ' : '
+        span = basename
+
+      - if @gen.files.size > 1
+        p.autohide
+          - @gen.files.each do |file|
+            = file.short_dirname == '.' ? '' : file.short_dirname + '/'
+            a href="#{file.doc_link}" = file.basename
+            br
+    
+    - if notes
+      .notes.area = notes
+
+    .area
+      table
+        tr
+          th Generated:
+          td = Time.now.to_s
