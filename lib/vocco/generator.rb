@@ -167,7 +167,7 @@ class Vocco::Generator::SourceFile
     @gen.notes.each do |dir|
       dirs << File.join(dir, short_dirname)
     end
-    ext       = '.{textile,md,mkd,markdowb,rdoc}'
+    ext       = '.{textile,md,mkd,markdown,rdoc}'
     dir_glob  = '{' + dirs.join(',') + '}/'
     dir_glob + basename + ext
   end
