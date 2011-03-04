@@ -7,19 +7,20 @@
 <meta http-equiv="content-type" content="text/html; charset=utf8" />
 <style type="text/css">
 <!--
-.Identifier { color: #c6b6ee; }
 .rubyIdentifier { color: #c6b6fe; }
-.Statement { color: #8197bf; }
 .rubyInstanceVariable { color: #c6b6fe; }
+.rubyControl { color: #7597c6; }
+.Identifier { color: #c6b6ee; }
 .Type { color: #ffb964; }
 .Constant { color: #cf6a4c; }
 .Function { color: #fad07a; }
 .rubySymbol { color: #7697d6; }
-.rubyControl { color: #7597c6; }
+.Statement { color: #8197bf; }
 .StringDelimiter { color: #556633; }
 .String { color: #99ad6a; }
 .rubyClass { color: #447799; }
 body { color: #e8e8d3; background-color: #151515; font-family: monospace; }
+.Comment { color: #888888; font-style: italic; }
 .PreProc { color: #8fbfdc; }
 -->
 </style><style type="text/css">body {
@@ -75,62 +76,107 @@ table th {
 <body><div class="code">
 <br />
 <br />
-<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">hpricot</span><span class="StringDelimiter">'</span><br />
-<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">tilt</span><span class="StringDelimiter">'</span><br />
-<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">tempfile</span><span class="StringDelimiter">'</span><br />
+<span class="Comment">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use</span><br />
+<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">hpricot</span><span class="StringDelimiter">'</span>&nbsp;&nbsp; <span class="Comment"># parse and modify html</span><br />
+<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">tilt</span><span class="StringDelimiter">'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Comment"># generate sidebar html</span><br />
+<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">tempfile</span><span class="StringDelimiter">'</span>&nbsp;&nbsp;<span class="Comment"># temporary vimscript</span><br />
 <br />
 <br />
 <span class="rubyClass">module</span>&nbsp;<span class="Type">Vocco</span><br />
 <br />
-&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">vocco/generator</span><span class="StringDelimiter">'</span><br />
-&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">vocco/cli</span><span class="StringDelimiter">'</span><br />
+&nbsp;&nbsp;<span class="Comment">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Responsibility</span><br />
+&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">vocco/generator</span><span class="StringDelimiter">'</span>&nbsp;<span class="Comment"># Generate docs</span><br />
+&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">vocco/cli</span><span class="StringDelimiter">'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="Comment"># Command line interface</span><br />
 <br />
 &nbsp;&nbsp;<span class="rubyClass">class</span>&nbsp;&lt;&lt; <span class="Constant">self</span><br />
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">name_fallback</span><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gemspec(<span class="rubySymbol">:name</span>) || <span class="Type">File</span>.basename(<span class="Type">Dir</span>.pwd)<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="Comment"># Vocco::run is the interface for using Vocco as a gem.</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">run</span>(opts)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validate(opts)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">Generator</span>.new(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">DEFAULTS</span>.merge(opts)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).run<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">site_fallback</span><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gemspec(<span class="rubySymbol">:homepage</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">alias</span>&nbsp;<span class="rubySymbol">:run!</span>&nbsp;<span class="rubySymbol">:run</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">alias</span>&nbsp;<span class="rubySymbol">:start</span>&nbsp;<span class="rubySymbol">:run</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">validate</span>(opts)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bad_opts = opts.keys - <span class="Type">OPTION_NAMES</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Statement">if</span>&nbsp;bad_opts.any?<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Statement">raise</span>&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Invalid options: </span><span class="Identifier">#{</span>bad_opts<span class="Identifier">}</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Statement">end</span><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="Comment"># Tries to read a property from the gemspec with the same name</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="Comment"># as the working dir, in the working dir.</span><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">gemspec</span>(prop)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">begin</span><br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">rubygems</span><span class="StringDelimiter">'</span><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@gemspec</span>&nbsp;||= <span class="Type">Gem</span>::<span class="Type">Specification</span>.load(<span class="Type">File</span>.basename(<span class="Type">Dir</span>.pwd) + <span class="StringDelimiter">'</span><span class="String">.gemspec</span><span class="StringDelimiter">'</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@gemspec</span>&nbsp;||= <span class="Type">Gem</span>::<span class="Type">Specification</span>.load(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">File</span>.basename(<span class="Type">Dir</span>.pwd) + <span class="StringDelimiter">'</span><span class="String">.gemspec</span><span class="StringDelimiter">'</span>)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@gemspec</span>.send prop<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">rescue</span><br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Constant">nil</span><br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
-<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">run</span>(opts)<br />
-<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bad_opts = opts.keys - <span class="Type">OPTIONS</span>.map {|<span class="rubyIdentifier">line</span>|&nbsp;line[<span class="Constant">0</span>] }<br />
-<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Statement">unless</span>&nbsp;bad_opts.empty?<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Statement">raise</span>&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Invalid options: </span><span class="Identifier">#{</span>bad_opts<span class="Identifier">}</span><span class="StringDelimiter">&quot;</span><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Statement">end</span><br />
-<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Constant">0</span>.upto(<span class="Type">OPTIONS</span>.size - <span class="Constant">1</span>) <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">n</span>|<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opts[<span class="Type">OPTIONS</span>[n][<span class="Constant">0</span>]] ||= <span class="Type">OPTIONS</span>[n][<span class="Constant">2</span>]<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
-<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">Generator</span>.new(opts).run<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">alias</span>&nbsp;<span class="rubySymbol">:run!</span>&nbsp;<span class="rubySymbol">:run</span><br />
 &nbsp;&nbsp;<span class="rubyClass">end</span><br />
 <br />
+&nbsp;&nbsp;<br />
+&nbsp;&nbsp;<span class="Comment"># These are the available options. They can be given on</span><br />
+&nbsp;&nbsp;<span class="Comment"># the command line, the linux way, or as a hash to</span><br />
+&nbsp;&nbsp;<span class="Comment"># Vocco.run(...), the Rubygem way. The format is:</span><br />
+&nbsp;&nbsp;<span class="Comment">#</span><br />
+&nbsp;&nbsp;<span class="Comment"># [name,&nbsp;&nbsp;&nbsp;&nbsp;description,</span><br />
+&nbsp;&nbsp;<span class="Comment">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; default_value</span><br />
+&nbsp;&nbsp;<span class="Comment">#&nbsp;&nbsp; ]</span><br />
+<br />
 &nbsp;&nbsp;<span class="Type">OPTIONS</span>&nbsp;= [<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:files</span>,&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">File match globs</span><span class="StringDelimiter">&quot;</span>,&nbsp;&nbsp; <span class="StringDelimiter">%w{</span><span class="String">**/*.rb README LICENSE</span><span class="StringDelimiter">}</span>&nbsp;&nbsp;],<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:out</span>,&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Output directory</span><span class="StringDelimiter">&quot;</span>,&nbsp;&nbsp; <span class="StringDelimiter">'</span><span class="String">./docs</span><span class="StringDelimiter">'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:notes</span>,&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Note directories</span><span class="StringDelimiter">&quot;</span>,&nbsp;&nbsp; [<span class="StringDelimiter">'</span><span class="String">./notes</span><span class="StringDelimiter">'</span>]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:name</span>,&nbsp;&nbsp; <span class="StringDelimiter">&quot;</span><span class="String">Project name</span><span class="StringDelimiter">&quot;</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name_fallback&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:site</span>,&nbsp;&nbsp; <span class="StringDelimiter">&quot;</span><span class="String">Project url</span><span class="StringDelimiter">&quot;</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;site_fallback&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br />
-&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:vim</span>,&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Vim command</span><span class="StringDelimiter">&quot;</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">%w{</span><span class="String">macvim gvim vim</span><span class="StringDelimiter">}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:files</span>,&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">File match globs</span><span class="StringDelimiter">&quot;</span>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">%w{</span><span class="String">**/*.rb README LICENSE</span><span class="StringDelimiter">}</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:out</span>,&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Output directory</span><span class="StringDelimiter">&quot;</span>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">'</span><span class="String">./docs</span><span class="StringDelimiter">'</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:notes</span>,&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Note directories</span><span class="StringDelimiter">&quot;</span>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="StringDelimiter">'</span><span class="String">./notes</span><span class="StringDelimiter">'</span>]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:name</span>,&nbsp;&nbsp; <span class="StringDelimiter">&quot;</span><span class="String">Project name</span><span class="StringDelimiter">&quot;</span>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gemspec(<span class="rubySymbol">:name</span>) || <span class="Type">File</span>.basename(<span class="Type">Dir</span>.pwd)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:site</span>,&nbsp;&nbsp; <span class="StringDelimiter">&quot;</span><span class="String">Project url</span><span class="StringDelimiter">&quot;</span>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gemspec(<span class="rubySymbol">:homepage</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;[<span class="rubySymbol">:vim</span>,&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">&quot;</span><span class="String">Vim command</span><span class="StringDelimiter">&quot;</span>, <span class="StringDelimiter">%w{</span><span class="String">macvim gvim vim</span><span class="StringDelimiter">}</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br />
 &nbsp;&nbsp;]<br />
+<br />
+&nbsp;&nbsp;<span class="Type">OPTION_NAMES</span>&nbsp;&nbsp;= <span class="Type">OPTIONS</span>.map(&amp;<span class="rubySymbol">:first</span>)<br />
+<br />
+&nbsp;&nbsp;<span class="Type">DEFAULTS</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {}<br />
+&nbsp;&nbsp;<br />
+&nbsp;&nbsp;<span class="Type">OPTIONS</span>.each <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">opt</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">DEFAULTS</span>[opt[<span class="Constant">0</span>]] = opt[<span class="Constant">2</span>]<br />
+&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+<br />
 <span class="rubyClass">end</span><br />
 <br />
 <br />
-</div><div class="nav"><div class="wrapper"><div class="area"><h3><strong><a href="http://github.com/jbe/vocco">Vocco</a></strong><span> : </span><span>vocco.rb</span></h3><p class="autohide"><a href="./README.html">README</a><br />vocco/<a href="./vocco-generator.rb.html">generator.rb</a><br />vocco/generator/<a href="./vocco-generator-css.rb.html">css.rb</a><br />vocco/generator/source_file/<a href="./vocco-generator-source_file-html_template.rb.html">html_template.rb</a><br />vocco/<a href="./vocco-cli.rb.html">cli.rb</a><br /><a href="./vocco.rb.html">vocco.rb</a><br /></p></div><div class="area"><table><tr><th>Generated:</th><td>2011-03-03 23:11:19 +0100</td></tr></table></div></div></div></body>
+</div><div class="nav"><div class="wrapper"><div class="area"><h3><strong><a href="http://github.com/jbe/vocco">Vocco</a></strong><span> : </span><span>vocco.rb</span></h3><p class="autohide"><a href="./README.html">README</a><br />vocco/<a href="./vocco-generator.rb.html">generator.rb</a><br />vocco/generator/<a href="./vocco-generator-css.rb.html">css.rb</a><br />vocco/generator/source_file/<a href="./vocco-generator-source_file-html_template.rb.html">html_template.rb</a><br />vocco/generator/<a href="./vocco-generator-source_file.rb.html">source_file.rb</a><br />vocco/<a href="./vocco-cli.rb.html">cli.rb</a><br /><a href="./vocco.rb.html">vocco.rb</a><br /></p></div><div class="notes area"><p><em>Easier to read from the bottom and up.</em></p>
+
+<p>Responsibilities:</p>
+
+<ul>
+<li>Define Vocco module and require dependencies</li>
+<li>Define options and defaults</li>
+<li>Expose interface for usage as Rubygem</li>
+</ul>
+
+</div><div class="area"><table><tr><th>Generated:</th><td>2011-03-04 16:34:02 +0100</td></tr></table></div></div></div></body>
 </html>
