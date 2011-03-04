@@ -17,8 +17,10 @@
             a href="#{file.doc_link}" = file.basename
             br
     
-    - if notes
-      .notes.area = notes
+    - if notes.any?
+      .notes.area
+        - notes.each do |note|
+          = note
 
     .area
       table

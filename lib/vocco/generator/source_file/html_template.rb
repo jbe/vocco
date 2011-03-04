@@ -18,10 +18,12 @@ _buf = [] ; _temple_pre_tags = /<pre|<textarea/ ; _buf << ("<div class=\"nav\"><
 "<a href=\"#{file.doc_link}\">#{file.basename}"\
 "</a><br>"\
 ""\
-"") ; end ; _buf << ("</p>") ; end ; _buf << ("</div>") ; if notes ; 
- ; _buf << ("<div class=\"notes area\">#{notes}"\
-""\
-"</div>") ; end ; _buf << ("<div class=\"area\"><table><tr><th>Generated:</th><td>"\
+"") ; end ; _buf << ("</p>") ; end ; _buf << ("</div>") ; if notes.any? ; 
+ ; _buf << ("<div class=\"notes area\">") ; 
+ ; notes.each do |note| ; 
+ ; _buf << (note) ; 
+ ; 
+ ; end ; _buf << ("</div>") ; end ; _buf << ("<div class=\"area\"><table><tr><th>Generated:</th><td>"\
 ""\
 ""\
 ""\

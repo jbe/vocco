@@ -83,8 +83,12 @@ module Vocco
 
   OPTION_NAMES  = OPTIONS.map(&:first)
 
-  DEFAULTS      = Hash[OPTION_NAMES.zip(
-                  OPTIONS.map(&:last)).flatten]
+  DEFAULTS      = {}
+  
+  OPTIONS.each do |opt|
+    DEFAULTS[opt[0]] = opt[2]
+  end
+
 end
 
 

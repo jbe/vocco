@@ -1,39 +1,40 @@
 
+require 'fileutils'
+
 
 class Vocco::Generator
 
-  require 'vocco/generator/css'
+  #        File                           What
+  require 'vocco/generator/css'         # CSS additions
+  require 'vocco/generator/source_file' # SourceFile class
 
   attr_reader :globs, :notes, :out, :name, :site
 
   def initialize(opts)
-    @globs  = opts[:files].map {|path| path.sub(/\/$/, '') }
+    @globs  = Array(opts[:files]
+              ).compact.map do |glob|
+                glob.gsub(/(^\.\/)|(\/$)/, '')
+              end
     @out    = opts[:out]
-    @notes  = opts[:notes]
+    @notes  = Array(opts[:notes]).compact
     @name   = opts[:name].capitalize
     @site   = opts[:site]
-    @vim    = opts[:vim]
-    validate_out
+    @vim    = Array(opts[:vim]).compact
+
+    FileUtils.mkdir_p(@out) # ensure out dir exists
   end
 
-  def run
-    run_vim; postprocess
-  end
-  alias :run! :run
-
-  def trimmed_globs
-    @trimmed_globs ||= @globs.map do |glob|
-      glob.gsub(/(^\.\/)|(\/$)/, '')
-    end
-  end
-
+  # the paths underneath which the @globs are globbing;
+  # the static part of the glob, or "scope" of sorts
   def scopes
-    @scopes ||= trimmed_globs.map do |glob|
+    @scopes ||= @globs.map do |glob|
       tokens = glob.split('*')
       tokens.size > 1 ? tokens.first : nil
     end.compact
   end
 
+  # regex to trim the glob dir scopes off a source
+  # file path.
   def glob_regex
     @glob_regex ||= begin
       str = scopes.map do |scope|
@@ -43,13 +44,7 @@ class Vocco::Generator
     end
   end
 
-  def doc_regex
-    @doc_regex ||= begin
-      str = Regexp::escape(@out) + '/'
-      /^#{str}/
-    end
-  end
-
+  # array of SourceFile's mapped from the glob matches
   def files
     @files ||= @globs.map do |glob|
       Dir[glob]
@@ -58,13 +53,12 @@ class Vocco::Generator
     end
   end
 
-  private
+  def run
+    run_vim; postprocess
+  end
+  alias :run! :run
 
-    def validate_out
-      unless File.directory?(@out)
-        raise "#{@out} is not a valid directory."
-      end
-    end
+  private
 
     def run_vim
       script = Tempfile.new('vimdocco')
@@ -112,69 +106,3 @@ class Vocco::Generator
     end
 end
 
-class Vocco::Generator::SourceFile
-  require 'vocco/generator/source_file/html_template'
-
-  def initialize(file, generator)
-    @file       = file
-    @gen        = generator
-  end
-
-  attr_reader :file
-
-  def short_path
-    @short_path ||= @file.sub(@gen.glob_regex, '')
-  end
-
-  def short_dirname
-    File.dirname(short_path).sub(/^\.\//, '')
-  end
-
-  def dirname
-    File.dirname(@file)
-  end
-
-  def basename
-    File.basename(@file)
-  end
-
-  def doc_prefix
-    short_dirname == '.' ? '' : short_dirname.gsub('/', '-') + '-'
-  end
-
-  def doc_path
-    File.join(@gen.out, doc_prefix + basename + '.html')
-  end
-
-  def doc_link
-    './' + doc_path.sub(@gen.doc_regex, '')
-  end
-
-  def notes
-    rendered = render_notes
-    rendered.any? ?
-      rendered.join("\n") : nil
-  end
-
-  def render_notes
-    Dir[note_glob].map do |path|
-      Tilt.new(path).render
-    end
-  end
-
-  def note_glob
-    dirs = [dirname]
-    @gen.notes.each do |dir|
-      dirs << File.join(dir, short_dirname)
-    end
-    ext       = '.{textile,md,mkd,markdown,rdoc}'
-    dir_glob  = '{' + dirs.join(',') + '}/'
-    dir_glob + basename + ext
-  end
-
-  class_eval <<-EOF, '(template)'
-    def render_template
-      #{HTML_TEMPLATE}
-    end
-  EOF
-end
