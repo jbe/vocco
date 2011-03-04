@@ -1,59 +1,90 @@
 
 
-require 'hpricot'
-require 'tilt'
-require 'tempfile'
+#        Gem          Use
+require 'hpricot'   # parse and modify html
+require 'tilt'      # generate sidebar html
+require 'tempfile'  # temporary vimscript
 
 
 module Vocco
 
-  require 'vocco/generator'
-  require 'vocco/cli'
+  #        File               Responsibility
+  require 'vocco/generator' # Generate docs
+  require 'vocco/cli'       # Command line interface
 
   class << self
-    def name_fallback
-      gemspec(:name) || File.basename(Dir.pwd)
+
+    # Vocco::run is the interface for using Vocco as a gem.
+    def run(opts)
+      validate(opts)
+      Generator.new(
+        DEFAULTS.merge(opts)
+        ).run
     end
 
-    def site_fallback
-      gemspec(:homepage)
+    alias :run! :run
+    alias :start :run
+
+    def validate(opts)
+      bad_opts = opts.keys - OPTION_NAMES
+
+      if bad_opts.any?
+        raise "Invalid options: #{bad_opts}"
+      end
     end
 
+    # Tries to read a property from the gemspec with the same name
+    # as the working dir, in the working dir.
     def gemspec(prop)
       begin
         require 'rubygems'
-        @gemspec ||= Gem::Specification.load(File.basename(Dir.pwd) + '.gemspec')
+        @gemspec ||= Gem::Specification.load(
+            File.basename(Dir.pwd) + '.gemspec')
         @gemspec.send prop
       rescue
         nil
       end
     end
-
-    def run(opts)
-
-      bad_opts = opts.keys - OPTIONS.map {|line| line[0] }
-
-      unless bad_opts.empty?
-        raise "Invalid options: #{bad_opts}"
-      end
-
-      0.upto(OPTIONS.size - 1) do |n|
-        opts[OPTIONS[n][0]] ||= OPTIONS[n][2]
-      end
-
-      Generator.new(opts).run
-    end
-    alias :run! :run
   end
 
+  
+  # These are the available options. They can be given on
+  # the command line, the linux way, or as a hash to
+  # Vocco.run(...), the Rubygem way. The format is:
+  #
+  # [name,    description,
+  #           default_value
+  #   ]
+
   OPTIONS = [
-    [:files,  "File match globs",   %w{**/*.rb README LICENSE}  ],
-    [:out,    "Output directory",   './docs'                    ],
-    [:notes,  "Note directories",   ['./notes']                 ],
-    [:name,   "Project name",       name_fallback               ],
-    [:site,   "Project url",        site_fallback               ],
-    [:vim,    "Vim command",        %w{macvim gvim vim}         ]
+    [:files,  "File match globs",
+              %w{**/*.rb README LICENSE}
+      ],
+
+    [:out,    "Output directory",
+              './docs'
+      ],
+
+    [:notes,  "Note directories",
+              ['./notes']
+      ],
+
+    [:name,   "Project name",
+              gemspec(:name) || File.basename(Dir.pwd)
+      ],
+
+    [:site,   "Project url",
+              gemspec(:homepage)
+      ],
+
+    [:vim,    "Vim command", %w{macvim gvim vim}
+      ]
   ]
+
+  OPTION_NAMES  = OPTIONS.map(&:first)
+
+  DEFAULTS      = Hash[OPTION_NAMES.zip(
+                  OPTIONS.map(&:last)).flatten]
 end
 
 

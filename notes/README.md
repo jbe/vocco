@@ -6,4 +6,6 @@ These paragraphs are actually "notes" attached to the README -- they were automa
 
 The supported note format extensions are: md, mkd, markdown, textile and rdoc.
 
-Have a great day. &hearts;
+Browse around the source code if you like -- hover just above these paragraphs to reveal the file list.
+
+&hearts;
