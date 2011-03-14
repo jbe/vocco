@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{vocco}
-  s.version = "0.1.3"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["jbe"]
-  s.date = %q{2011-03-04}
+  s.date = %q{2011-03-14}
   s.default_executable = %q{vocco}
   s.description = %q{vocco is an extra super quick-and-dirty documentation generator based on Vim, written in Ruby.}
   s.email = %q{post@jostein.be}
@@ -29,6 +29,13 @@ Gem::Specification.new do |s|
     "TODO",
     "VERSION",
     "bin/vocco",
+    "docs/README.html",
+    "docs/lib-vocco-cli.rb.html",
+    "docs/lib-vocco-generator-css.rb.html",
+    "docs/lib-vocco-generator-source_file-html_template.rb.html",
+    "docs/lib-vocco-generator-source_file.rb.html",
+    "docs/lib-vocco-generator.rb.html",
+    "docs/lib-vocco.rb.html",
     "lib/vocco.rb",
     "lib/vocco/cli.rb",
     "lib/vocco/generator.rb",
