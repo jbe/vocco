@@ -40,6 +40,7 @@ module Vocco
         require 'rubygems'
         @gemspec ||= Gem::Specification.load(
           Dir['**/*.gemspec'].first
+          )
         @gemspec.send prop
       rescue
         nil

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Vocco : generator.rb</title>
+<meta name="Generator" content="Vim/7.2" />
+<meta content="text/html; charset=utf8" http-equiv="content-type" />
+<style type="text/css">
+<!--
+.Special { color: #799d6a; }
+.Identifier { color: #c6b6ee; }
+.rubyIdentifier { color: #c6b6fe; }
+.rubyRegexpDelimiter { color: #540063; }
+.rubyRegexpSpecial { color: #a40073; }
+.Constant { color: #cf6a4c; }
+.Comment { color: #888888; font-style: italic; }
+.Statement { color: #8197bf; }
+.rubySymbol { color: #7697d6; }
+.Function { color: #fad07a; }
+.rubyInstanceVariable { color: #c6b6fe; }
+.rubyControl { color: #7597c6; }
+.Type { color: #ffb964; }
+.StringDelimiter { color: #556633; }
+.String { color: #99ad6a; }
+.rubyClass { color: #447799; }
+body { color: #e8e8d3; background-color: #151515; font-family: monospace; }
+.PreProc { color: #8fbfdc; }
+-->
+</style><style type="text/css">body {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
+  font-size: 15px; }
+
+html, body {
+  height: 100%; }
+
+body {
+  padding: 1em; }
+
+.code {
+  font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace;
+  font-size: 16px;
+  padding: 1em;
+  width: 50%; }
+
+.nav {
+  width: 40%;
+  position: fixed;
+  top: 0;
+  left: 55%;
+  height: 100%;
+  font-size: 15px;
+  line-height: 22px;
+  color: #252519; }
+  .nav .wrapper {
+    color: black;
+    height: 100%; }
+    .nav .wrapper .area {
+      background-color: #cccccc;
+      padding: 1em 1em 1em 1em;
+      border-bottom: 1px dashed #bbbbbb;
+      border-top: 1px dashed #666666; }
+      .nav .wrapper .area .autohide {
+        opacity: 0;
+        height: 0px;
+        -webkit-transition: all 0.2s linear;
+        overflow: auto; }
+      .nav .wrapper .area:hover .autohide {
+        height: 150px;
+        opacity: 1; }
+    .nav .wrapper .notes {
+      max-height: 40%;
+      overflow: auto; }
+
+table th {
+  text-align: right; }
+
+</style>
+</head>
+<body><div class="code">
+<br />
+<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">fileutils</span><span class="StringDelimiter">'</span><br />
+<br />
+<br />
+<span class="rubyClass">class</span>&nbsp;<span class="Type">Vocco</span>::<span class="Type">Generator</span><br />
+<br />
+&nbsp;&nbsp;<span class="Comment">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; What</span><br />
+&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">vocco/generator/css</span><span class="StringDelimiter">'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="Comment"># CSS additions</span><br />
+&nbsp;&nbsp;<span class="PreProc">require</span>&nbsp;<span class="StringDelimiter">'</span><span class="String">vocco/generator/source_file</span><span class="StringDelimiter">'</span>&nbsp;<span class="Comment"># SourceFile class</span><br />
+<br />
+&nbsp;&nbsp;<span class="Statement">attr_reader</span>&nbsp;<span class="rubySymbol">:globs</span>, <span class="rubySymbol">:notes</span>, <span class="rubySymbol">:out</span>, <span class="rubySymbol">:name</span>, <span class="rubySymbol">:site</span><br />
+<br />
+&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">initialize</span>(opts)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@globs</span>&nbsp;&nbsp;= Array(opts[<span class="rubySymbol">:files</span>]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).compact.map <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">glob</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;glob.gsub(<span class="rubyRegexpDelimiter">/</span><span class="rubyRegexpSpecial">(</span><span class="rubyRegexpSpecial">^</span><span class="rubyRegexpSpecial">\.\/</span><span class="rubyRegexpSpecial">)|(</span><span class="rubyRegexpSpecial">\/</span><span class="rubyRegexpSpecial">$</span><span class="rubyRegexpSpecial">)</span><span class="rubyRegexpDelimiter">/</span>, <span class="StringDelimiter">''</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@out</span>&nbsp;&nbsp;&nbsp;&nbsp;= opts[<span class="rubySymbol">:out</span>]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@notes</span>&nbsp;&nbsp;= Array(opts[<span class="rubySymbol">:notes</span>]).compact<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@name</span>&nbsp;&nbsp; = opts[<span class="rubySymbol">:name</span>].capitalize<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@site</span>&nbsp;&nbsp; = opts[<span class="rubySymbol">:site</span>]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@vim</span>&nbsp;&nbsp;&nbsp;&nbsp;= Array(opts[<span class="rubySymbol">:vim</span>]).compact<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">FileUtils</span>.mkdir_p(<span class="rubyInstanceVariable">@out</span>) <span class="Comment"># ensure out dir exists</span><br />
+&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;<span class="Comment"># the paths underneath which the @globs are globbing;</span><br />
+&nbsp;&nbsp;<span class="Comment"># the static part of the glob, or &quot;scope&quot; of sorts</span><br />
+&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">scopes</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@scopes</span>&nbsp;||= <span class="rubyInstanceVariable">@globs</span>.map <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">glob</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tokens = glob.split(<span class="StringDelimiter">'</span><span class="String">*</span><span class="StringDelimiter">'</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tokens.size &gt; <span class="Constant">1</span>&nbsp;? tokens.first : <span class="Constant">nil</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span>.compact<br />
+&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;<span class="Comment"># regex to trim the glob dir scopes off a source</span><br />
+&nbsp;&nbsp;<span class="Comment"># file path.</span><br />
+&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">glob_regex</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@glob_regex</span>&nbsp;||= <span class="rubyControl">begin</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str = scopes.map <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">scope</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">Regexp</span>::escape(scope)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span>.join(<span class="StringDelimiter">'</span><span class="String">|</span><span class="StringDelimiter">'</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyRegexpDelimiter">/</span><span class="rubyRegexpSpecial">^</span><span class="rubyRegexpSpecial">(</span><span class="rubyRegexpSpecial">\.\/</span><span class="rubyRegexpSpecial">)</span><span class="rubyRegexpSpecial">?</span><span class="rubyRegexpSpecial">(</span><span class="Identifier">#{</span>str<span class="Identifier">}</span><span class="rubyRegexpSpecial">)(</span><span class="rubyRegexpSpecial">\/</span><span class="rubyRegexpSpecial">)</span><span class="rubyRegexpSpecial">?</span><span class="rubyRegexpDelimiter">/</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;<span class="Comment"># array of SourceFile's mapped from the glob matches</span><br />
+&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">files</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@files</span>&nbsp;||= <span class="rubyInstanceVariable">@globs</span>.map <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">glob</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">Dir</span>[glob]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span>.flatten.uniq.map <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">path</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">SourceFile</span>.new(path, <span class="Constant">self</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">run</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;run_vim; postprocess<br />
+&nbsp;&nbsp;<span class="PreProc">end</span><br />
+&nbsp;&nbsp;<span class="PreProc">alias</span>&nbsp;<span class="rubySymbol">:run!</span>&nbsp;<span class="rubySymbol">:run</span><br />
+<br />
+&nbsp;&nbsp;<span class="Statement">private</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">run_vim</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;script = <span class="Type">Tempfile</span>.new(<span class="StringDelimiter">'</span><span class="String">vimdocco</span><span class="StringDelimiter">'</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;script.write(vimscript)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;script.close<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;puts <span class="StringDelimiter">'</span><span class="String">Running </span><span class="StringDelimiter">'</span>&nbsp;+ vim_command + <span class="StringDelimiter">'</span><span class="String">:</span><span class="StringDelimiter">'</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;system <span class="StringDelimiter">&quot;</span><span class="Identifier">#{</span>vim_command<span class="Identifier">}</span><span class="String">&nbsp;-f -S </span><span class="Identifier">#{</span>script.path<span class="Identifier">}</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;script.delete<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">vim_command</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@vim_command</span>&nbsp;||= <span class="rubyInstanceVariable">@vim</span>.detect <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">c</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="StringDelimiter">`</span><span class="String">which </span><span class="Identifier">#{</span>c<span class="Identifier">}</span><span class="StringDelimiter">`</span>.chomp.strip != <span class="StringDelimiter">''</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span>&nbsp;|| <span class="rubyControl">abort</span>(<span class="StringDelimiter">&quot;</span><span class="String">You must install one of </span><span class="Identifier">#{</span><span class="rubyInstanceVariable">@vim</span>.inspect<span class="Identifier">}</span><span class="String">.</span><span class="StringDelimiter">&quot;</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">vimscript</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyInstanceVariable">@vimscript</span>&nbsp;||= <span class="rubyControl">begin</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s = <span class="StringDelimiter">&quot;</span><span class="String">let html_no_pre = 1</span><span class="Special">\n</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;files.each <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">file</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s &lt;&lt; <span class="StringDelimiter">&quot;</span><span class="String">view! </span><span class="Identifier">#{</span>file.file<span class="Identifier">}</span><span class="Special">\n</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s &lt;&lt; <span class="StringDelimiter">&quot;</span><span class="String">TOhtml</span><span class="Special">\n</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s &lt;&lt; <span class="StringDelimiter">&quot;</span><span class="String">w! </span><span class="Identifier">#{</span>file.doc_path<span class="Identifier">}</span><span class="Special">\n</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s &lt;&lt; <span class="StringDelimiter">&quot;</span><span class="String">:qall!</span><span class="Special">\n</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">postprocess</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hpricotify_docs <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">doc</span>, <span class="rubyIdentifier">file</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doc.at(<span class="StringDelimiter">'</span><span class="String">style</span><span class="StringDelimiter">'</span>).after(<span class="StringDelimiter">'</span><span class="String">&lt;style type=&quot;text/css&quot;&gt;</span><span class="StringDelimiter">'</span>&nbsp;+ <span class="Type">CSS</span>&nbsp;+ <span class="StringDelimiter">'</span><span class="String">&lt;/style&gt;</span><span class="StringDelimiter">'</span>)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doc.at(<span class="StringDelimiter">'</span><span class="String">title</span><span class="StringDelimiter">'</span>).inner_html = name + <span class="StringDelimiter">'</span><span class="String">&nbsp;: </span><span class="StringDelimiter">'</span>&nbsp;+ file.basename<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inner = doc.at(<span class="StringDelimiter">'</span><span class="String">body</span><span class="StringDelimiter">'</span>).inner_html<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doc.at(<span class="StringDelimiter">'</span><span class="String">body</span><span class="StringDelimiter">'</span>).swap <span class="StringDelimiter">&quot;</span><span class="String">&lt;body&gt;&lt;div class='code'&gt;</span><span class="Identifier">#{</span>inner<span class="Identifier">}</span><span class="String">&lt;/div&gt;&lt;/body&gt;</span><span class="StringDelimiter">&quot;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doc.at(<span class="StringDelimiter">'</span><span class="String">.code</span><span class="StringDelimiter">'</span>).after file.render_template<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">def</span>&nbsp;<span class="Function">hpricotify_docs</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;files.each <span class="rubyControl">do</span>&nbsp;|<span class="rubyIdentifier">file</span>|<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doc = <span class="Type">File</span>.open(file.doc_path) {|<span class="rubyIdentifier">f</span>|&nbsp;Hpricot(f) }<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Statement">yield</span>(doc, file)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Type">File</span>.open(file.doc_path, <span class="StringDelimiter">'</span><span class="String">w</span><span class="StringDelimiter">'</span>)&nbsp;&nbsp;{|<span class="rubyIdentifier">f</span>|&nbsp;f.write(doc.to_html) }<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rubyControl">end</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="PreProc">end</span><br />
+<span class="rubyClass">end</span><br />
+<br />
+</div><div class="nav"><div class="wrapper"><div class="area"><h3><strong><a href="http://github.com/jbe/vocco">Vocco</a></strong><span> : </span><span>generator.rb</span></h3><p class="autohide">lib/vocco/<a href="./lib-vocco-generator.rb.html">generator.rb</a><br />lib/vocco/generator/<a href="./lib-vocco-generator-css.rb.html">css.rb</a><br />lib/vocco/generator/source_file/<a href="./lib-vocco-generator-source_file-html_template.rb.html">html_template.rb</a><br />lib/vocco/generator/<a href="./lib-vocco-generator-source_file.rb.html">source_file.rb</a><br />lib/vocco/<a href="./lib-vocco-cli.rb.html">cli.rb</a><br />lib/<a href="./lib-vocco.rb.html">vocco.rb</a><br /><a href="./README.html">README</a><br /></p></div><div class="area"><table><tr><th>Generated:</th><td>Mon Mar 14 01:26:25 +0100 2011</td></tr></table></div></div></div></body>
+</html>
