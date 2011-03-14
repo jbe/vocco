@@ -39,7 +39,7 @@ module Vocco
       begin
         require 'rubygems'
         @gemspec ||= Gem::Specification.load(
-            File.basename(Dir.pwd) + '.gemspec')
+          Dir['**/*.gemspec'].first
         @gemspec.send prop
       rescue
         nil
@@ -81,7 +81,7 @@ module Vocco
       ]
   ]
 
-  OPTION_NAMES  = OPTIONS.map(&:first)
+  OPTION_NAMES  = OPTIONS.map {|opt| opt.first }
 
   DEFAULTS      = {}
   
